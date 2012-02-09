@@ -24,26 +24,10 @@ if(typeof BFA== "undefined"){
 	var BFA={};
 }
 
-BFA.NavigationController= function(containerId){
-	this.containerId= containerId;
-	this.controllers=new Array();
-	this.pushController= function(controllerRef){
-		//TODO: Probably we want to add some validation here.
-		controllerRef.navigationController= this;
-		this.controllers.push(controllerRef);
-		this.injectController(controllerRef);
-	};
-	
-	this.injectController= function(controllerRef){
-		controllerRef.viewWillAppear();
-		$('#'+this.containerId).html(controllerRef.view.toString());
-		//TODO: We need to detect when the dom injected the new stuff...
-		controllerRef.viewDidAppear();
-	};
-	
-	this.pop=function(){
-		this.controllers.pop();
-		var controller= this.controllers(this.controllers.length-1);
-		this.injectController(controller);
-	};
+BFA.View= function(){
+	this.rawString= "<div class=\"tableRow\">HolaMundo!!! </div>";
+}
+
+BFA.View.prototype.toString= function(){
+	return this.rawString;
 }
