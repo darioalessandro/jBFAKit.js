@@ -36,9 +36,9 @@ BFA.NavigationController= function(containerId){
 	
 	this.injectController= function(controllerRef){
 		controllerRef.viewWillAppear();
-		$('#'+this.containerId).html(controllerRef.view.toString());
+		$('#'+this.containerId).html(controllerRef.view.HTMLString());
 		//TODO: We need to detect when the dom injected the new stuff...
-		controllerRef.viewDidAppear();
+		setTimeout(bind(controllerRef, controllerRef.viewDidAppear), 100);		
 	};
 	
 	this.pop=function(){

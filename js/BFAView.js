@@ -25,9 +25,11 @@ if(typeof BFA== "undefined"){
 }
 
 BFA.View= function(){
-	this.rawString= "<div class=\"tableRow\">HolaMundo!!! </div>";
-}
+	
+};
 
-BFA.View.prototype.toString= function(){
-	return this.rawString;
-}
+BFA.View.prototype.HTMLString= function(){
+	return "<div class=\"tableRow\">HolaMundo!!! </div>";
+};
+
+
