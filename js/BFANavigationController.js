@@ -26,12 +26,11 @@ if(typeof BFA== "undefined"){
 
 BFA.NavigationController= function(containerId){
 	this.containerId= containerId;
-	this.controllers=new Array();
 	this.pushController= function(controllerRef){
 		//TODO: Probably we want to add some validation here.
 		controllerRef.navigationController= this;
-		this.controllers.push(controllerRef);
 		this.injectController(controllerRef);
+		window.history.pushState(controllerRef.title, "Title", "#"+controllerRef.title);
 	};
 	
 	this.injectController= function(controllerRef){
@@ -41,9 +40,11 @@ BFA.NavigationController= function(containerId){
 		setTimeout(bind(controllerRef, controllerRef.viewDidAppear), 100);		
 	};
 	
-	this.pop=function(){
-		this.controllers.pop();
-		var controller= this.controllers(this.controllers.length-1);
-		this.injectController(controller);
+	this.pop=function(stackstate){
+		if(typeof stackstate.state != "undefined" && stackstate.state!=null){
+			this.injectController(eval("new "+stackstate.state+"()"));
+		}
 	};
+	
+	window.onpopstate= bind(this, this.pop);
 }

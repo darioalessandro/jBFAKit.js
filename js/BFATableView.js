@@ -24,30 +24,38 @@ if(typeof BFA== "undefined"){
 	var BFA={};
 }
 
-BFA.TableView= function(cellId, cellColor, cellImage){
+BFA.TableView= function(cellId, cellColor, cellImage, title, message, detailMessage){
 	this.cellColor= cellColor;
 	this.cellImage= cellImage;
 	this.numberOfRows= 0;
 	this.cellId=cellId;
+	this.message= message;
+	this.detailMesage= detailMessage;
+	this.title=title;
 	
 	this.htmlRow=function(){
-		return "<div class=\"tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\"> \
+		return "<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\"> \
 					<img src=\""+this.cellImage+"\" alt=\"../../resources/pablo.jpg\" class=\"tableImageCell\"> \
+					<div class=\"tableCellTitle\">"+this.title+"</div>\
 					<div class=\"tableDetailCell\"> \
-						<div class=\"userMessage\" id=\"IDuserMessage1\">¡Voy a ganar este reto!</div> \
+						<div class=\"userMessage\" id=\"IDuserMessage1\">"+this.message+"</div> \
 						<canvas id=\"myCanvas4\" width=\"600\" height=\"60\">Your browser does not have support for canvas.</canvas>\
 					</div>\
 				</div>";
 	};
 				
 				
-	this.insertRowIntoContainer= function(tableContainerid, cellColor, cellImage){
+	this.insertRowIntoContainer= function(tableContainerid, cellColor, cellImage, title, message, detailMessage){
 		if(cellColor!=null){
 			this.cellColor= cellColor;
 		}
 		if(cellImage){
 			this.cellImage= cellImage;
 		}
+		
+		this.message= message;
+		this.detailMesage= detailMessage;
+		this.title=title;
 		
 		var currentInnerHTML= $("#"+tableContainerid).html();
 		currentInnerHTML= currentInnerHTML.concat(this.htmlRow());
