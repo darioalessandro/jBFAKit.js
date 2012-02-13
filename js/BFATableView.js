@@ -59,7 +59,6 @@ BFA.TableView= function(cellId, cellColor, cellImage, title, message, detailMess
 		
 		var currentInnerHTML= $("#"+tableContainerid).html();
 		currentInnerHTML= currentInnerHTML.concat(this.htmlRow());
-		console.log(currentInnerHTML);
 		$("#"+tableContainerid).html(currentInnerHTML);
 	};
 	
