@@ -52,7 +52,10 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
      			$("#"+this.cellId).unbind('animationend webkitAnimationEnd');     			
      		}));
      		$("#"+this.cellId).addClass("hightlightedRow");
-     		this.dropCell();     		
+     		this.dropCell();
+     		$("#"+this.cellId+"canvas").bind("click", function(click){
+     			console.log("clickOnCanvas");
+     		});   		
      	}else{
      		$(".blocker").die("click");
      		$(".blocker").remove();     		
@@ -68,16 +71,47 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
    // this.delegate.didSelectedRow(this);			
 	
 	
+	// this.htmlRow=function(){
+		// return "<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\"> \
+					// <img src=\""+this.cellImage+"\" alt=\"../../resources/pablo.jpg\" class=\"tableImageCell\"> \
+					// <div class=\"tableCellTitle\">"+this.title+"</div>\
+					// <div class=\"tableDetailCell\"> \
+						// <div class=\"userMessage\" id=\"IDuserMessage1\">"+this.message+"</div> \
+						// <canvas  id=\""+this.cellId+"canvas\" width=\"460\" height=\"60\">Your browser does not have support for canvas.</canvas>\
+					// </div>\
+				// </div>";
+	// };
+
+	// this.editableHTMLRow=function(){
+		// return "<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\"> \
+					// <img src=\""+this.cellImage+"\" alt=\"../../resources/pablo.jpg\" class=\"tableImageCell\"> \
+					// <div class=\"tableCellTitle\">"+this.title+"</div>\
+					// <div class=\"tableDetailCell\"> \
+					// <textarea type=\"text\" class=\"userMessage\" id=\"IDuserMessage1\" style=\"margin-top: 0px; margin-bottom: 0px; height: 55px; margin-left: 0px; margin-right: 0px; width: 449px; \"></textarea>\
+					// <input type=\"text\" style=\"height: 27px;float: right;font-size: 15px;\">\		
+				// </div>";	
+	// };
+	
 	this.htmlRow=function(){
-		return "<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\"> \
-					<img src=\""+this.cellImage+"\" alt=\"../../resources/pablo.jpg\" class=\"tableImageCell\"> \
-					<div class=\"tableCellTitle\">"+this.title+"</div>\
-					<div class=\"tableDetailCell\"> \
-						<div class=\"userMessage\" id=\"IDuserMessage1\">"+this.message+"</div> \
-						<canvas  id=\""+this.cellId+"canvas\" width=\"460\" height=\"60\">Your browser does not have support for canvas.</canvas>\
-					</div>\
-				</div>";
+		var row= new String();
+		row=row.concat("<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\">");
+		row=row.concat("<img src=\""+this.cellImage+"\" alt=\"../../resources/pablo.jpg\" class=\"tableImageCell\"> ");
+		row=row.concat("<div class=\"tableCellTitle\">"+this.title+"</div>");
+		row=row.concat("<div class=\"tableDetailCell\">");
+		row=row.concat("<textarea type=\"text\" placeholder=\"Actualiza el status de tu meta! ej: \'Estoy a punto de lograrlo\'\" class=\"userMessage\" id=\"IDuserMessage1\" style=\"margin-top: 0px; margin-bottom: 0px; height: 55px; margin-left: 0px; margin-right: 0px; width: 449px; \"></textarea>");
+		row=row.concat("<input type=\"button\" value=\"Aceptar\" style=\"width:100px; height: 80px;float: right;font-size: 15px;bottom: 0;margin-bottom: 0;position: relative;top: 38px;left: 5px;\">");
+		row=row.concat("<input type=\"button\" value=\"Cancelar\" style=\"width:100px; height: 80px;float: right;font-size: 15px;margin-top: 38px;\">");
+		row=row.concat("<input type=\"text\" placeholder=\"Porcentaje (0..100)\"style=\"height: 27px;float: right;font-size: 13px;margin-top: 26px;border-right-width: 2px;margin-right: 10px;\">");
+		row=row.concat("</div>");
+		row=row.concat("</div>");
+					
+					// <textarea type=\"text\" class=\"userMessage\" id=\"IDuserMessage1\" style=\"margin-top: 0px; margin-bottom: 0px; height: 55px; margin-left: 0px; margin-right: 0px; width: 449px; \"></textarea>\
+					// <input type=\"text\" style=\"height: 27px;float: right;font-size: 15px;\"> \
+													
+				
+		return row; 	
 	};
+
 	
 	// this.didSelectedRow=function(){
 		// console.log("click");
