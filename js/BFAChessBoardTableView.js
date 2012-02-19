@@ -56,6 +56,31 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
      		$("#"+this.cellId+"canvas").bind("click", function(click){
      			console.log("clickOnCanvas");
      		});   	
+     		$("#aceptar").live("click", bind(this, function(){     			
+     		// $id=$_GET["id"];
+			// $fbid= $_GET["fbid"];
+			// $goalName=$_GET["goalName"];
+			// $percentageDone=$_GET["percentageDone"];
+			// $updatemessage=$_GET["updatemessage"];
+			
+			// this.goal=FWG.context.selectedGoal;
+				var update= {
+					goal_name:FWG.context.selectedGoal.name,
+					progress: $("#updateTextInputId").val(),
+					update: $("#updateTextAreaId").val(),
+				};
+				if(update.goal_name!=null && update.progress!=null && update.update!=null && update.update!=""  && update.progress!=""){
+     				FWG.context.updateChessBoard(update);
+     				this.didSelectedRow();
+     			}else{
+     				alert("datos incompletos");
+     			}
+     			
+     		}));
+     		
+     		$("#cancelar").live("click", bind(this,function(){
+     			this.didSelectedRow();
+     		}));
      		this.showEditableCell();
      			
      	}else{
@@ -68,6 +93,8 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 				this.didSelectedRow();
 			}));
 			this.showNonEditableCell();
+			$("#aceptar").die("click");
+     		$("#cancelar").die("click");
      	}
    };
    
@@ -104,16 +131,6 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 						<canvas  id=\""+this.cellId+"canvas\" width=\"460\" height=\"60\">Your browser does not have support for canvas.</canvas>\
 					</div>";
 	};
-
-	// this.editableHTMLRow=function(){
-		// return "<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\"> \
-					// <img src=\""+this.cellImage+"\" alt=\"../../resources/pablo.jpg\" class=\"tableImageCell\"> \
-					// <div class=\"tableCellTitle\">"+this.title+"</div>\
-					// <div class=\"tableDetailCell\"> \
-					// <textarea type=\"text\" class=\"userMessage\" id=\"IDuserMessage1\" style=\"margin-top: 0px; margin-bottom: 0px; height: 55px; margin-left: 0px; margin-right: 0px; width: 449px; \"></textarea>\
-					// <input type=\"text\" style=\"height: 27px;float: right;font-size: 15px;\">\		
-				// </div>";	
-	// };
 	
 	this.editableHTMLRow=function(){
 		var row= new String();
@@ -121,10 +138,10 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 		row=row.concat("<img src=\""+this.cellImage+"\" alt=\"../../resources/pablo.jpg\" class=\"tableImageCell\"> ");
 		row=row.concat("<div class=\"tableCellTitle\">"+this.title+"</div>");
 		row=row.concat("<div class=\"tableDetailCell\">");
-		row=row.concat("<textarea type=\"text\" placeholder=\"Actualiza el status de tu meta! ej: \'Estoy a punto de lograrlo\'\" class=\"userMessage\" id=\"IDuserMessage1\" style=\"margin-top: 0px; margin-bottom: 0px; height: 55px; margin-left: 0px; margin-right: 0px;width: 476px; max-width: 476px; max-height: 55px; \"></textarea>");
-		row=row.concat("<input type=\"button\" value=\"Aceptar\" style=\"width:100px; height: 80px;float: right;font-size: 15px;bottom: 0;margin-bottom: 0;position: relative;top: 38px;left: 5px;\">");
-		row=row.concat("<input type=\"button\" value=\"Cancelar\" style=\"width:100px; height: 80px;float: right;font-size: 15px;margin-top: 38px;\">");
-		row=row.concat("<input type=\"text\" placeholder=\"Porcentaje (0..100)\"style=\"height: 27px;float: right;font-size: 13px;margin-top: 26px;border-right-width: 2px;margin-right: 10px;\">");
+		row=row.concat("<textarea type=\"text\" id=\"updateTextAreaId\" placeholder=\"Actualiza el status de tu meta! ej: \'Estoy a punto de lograrlo\'\" class=\"userMessage\" id=\"IDuserMessage1\" style=\"margin-top: 0px; margin-bottom: 0px; height: 55px; margin-left: 0px; margin-right: 0px;width: 476px; max-width: 476px; max-height: 55px; font-size: 15px; \"></textarea>");
+		row=row.concat("<input type=\"button\" id=\"aceptar\" value=\"Aceptar\" style=\"width:100px; height: 80px;float: right;font-size: 15px;bottom: 0;margin-bottom: 0;position: relative;top: 38px;left: 5px;\">");
+		row=row.concat("<input type=\"button\" id=\"cancelar\" value=\"Cancelar\" style=\"width:100px; height: 80px;float: right;font-size: 15px;margin-top: 38px;\">");
+		row=row.concat("<input type=\"text\" id=\"updateTextInputId\" placeholder=\"Porcentaje (0..100)\"style=\"height: 27px;float: right;font-size: 13px;margin-top: 26px;border-right-width: 2px;margin-right: 10px;\">");
 		row=row.concat("</div>");
 		// row=row.concat("</div>");
 		return row; 	
