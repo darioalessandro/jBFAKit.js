@@ -24,7 +24,7 @@ if(typeof BFA== "undefined"){
 	var BFA={};
 }
 
-BFA.TableView= function(cellId, cellColor, cellImage, title, message, detailMessage, delegate){
+BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, detailMessage, progress, delegate){
 	this.cellColor= cellColor;
 	this.cellImage= cellImage;
 	this.numberOfRows= 0;
@@ -33,7 +33,7 @@ BFA.TableView= function(cellId, cellColor, cellImage, title, message, detailMess
 	this.detailMesage= detailMessage;
 	this.title=title;
 	this.delegate=delegate;
-	
+	this.progress=progress;
 	
 	
 	this.htmlRow=function(){
@@ -42,7 +42,7 @@ BFA.TableView= function(cellId, cellColor, cellImage, title, message, detailMess
 					<div class=\"tableCellTitle\">"+this.title+"</div>\
 					<div class=\"tableDetailCell\"> \
 						<div class=\"userMessage\" id=\"IDuserMessage1\">"+this.message+"</div> \
-						<canvas  id=\""+this.cellId+"canvas\" width=\"400\" height=\"60\">Your browser does not have support for canvas.</canvas>\
+						<canvas  id=\""+this.cellId+"canvas\" width=\"460\" height=\"60\">Your browser does not have support for canvas.</canvas>\
 					</div>\
 				</div>";
 	};
@@ -53,12 +53,16 @@ BFA.TableView= function(cellId, cellColor, cellImage, title, message, detailMess
 	}
 				
 				
-	this.insertRowIntoContainer= function(tableContainerid, cellColor, cellImage, title, message, detailMessage){
+	this.insertRowIntoContainer= function(tableContainerid, cellColor, cellImage, title, message, detailMessage, progress){
 		if(cellColor!=null){
 			this.cellColor= cellColor;
 		}
 		if(cellImage){
 			this.cellImage= cellImage;
+		}
+		
+		if(progress!=null){
+			this.progress=progress;
 		}
 		
 		this.message= message;
@@ -68,6 +72,7 @@ BFA.TableView= function(cellId, cellColor, cellImage, title, message, detailMess
 		var currentInnerHTML= $("#"+tableContainerid).html();
 		currentInnerHTML= currentInnerHTML.concat(this.htmlRow());
 		$("#"+tableContainerid).html(currentInnerHTML);
+		BFA.ProgressBar(this.cellId+"canvas", this.progress/100);
 		$("#"+cellId).bind('click', bind(this, this.didSelectedRow));
 	};
 	
