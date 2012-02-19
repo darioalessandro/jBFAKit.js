@@ -22,7 +22,7 @@ SOFTWARE.
 
 if(typeof BFA== "undefined"){
 	var BFA={};
-}
+};
 
 BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, detailMessage, progress, delegate){
 	this.cellColor= cellColor;
@@ -34,7 +34,35 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 	this.title=title;
 	this.delegate=delegate;
 	this.progress=progress;
+	this.highlighted=false;
 	
+	$("#"+this.cellId).live('click', bind(this,function(){
+		if(this.highlighted==false){
+			var htmlBody= $("body").html();
+			htmlBody= htmlBody.concat("<div id=\"blocker\"></div>");
+			$("body").html(htmlBody);
+			$("#"+this.cellId).bind('animationend webkitAnimationEnd', bind(this, function() { 
+     			$("#"+this.cellId).css("-webkit-transform", "scale(1.1,1.1)");
+     			$("#"+this.cellId).unbind('animationend webkitAnimationEnd');     			
+     		}));
+     		$("#"+this.cellId).addClass("hightlightedRow");
+     		this.highlighted=true;
+     	}else{
+     		// $("#blocker").remove();
+     		$("#"+this.cellId).bind('animationend webkitAnimationEnd', bind(this, function() { 
+     			$("#"+this.cellId).removeClass("unselectRow");
+     			$("#"+this.cellId).css("-webkit-transform", "scale(1,1)");
+     			$("#"+this.cellId).unbind('animationend webkitAnimationEnd');    			
+     		}));
+     		$("#"+this.cellId).removeClass("hightlightedRow");
+     		$("#"+this.cellId).addClass("unselectRow");
+     		
+     		this.highlighted=false;
+     	}
+     	
+		
+		this.delegate.didSelectedRow(this);	
+	}));
 	
 	this.htmlRow=function(){
 		return "<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\"> \
@@ -50,7 +78,7 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 	this.didSelectedRow=function(){
 		console.log("click");
 		this.delegate.didSelectedRow(this);
-	}
+	};
 				
 				
 	this.insertRowIntoContainer= function(tableContainerid, cellColor, cellImage, title, message, detailMessage, progress){
@@ -72,15 +100,12 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 		var currentInnerHTML= $("#"+tableContainerid).html();
 		currentInnerHTML= currentInnerHTML.concat(this.htmlRow());
 		$("#"+tableContainerid).html(currentInnerHTML);
-		BFA.ProgressBar(this.cellId+"canvas", this.progress/100);
-		$("#"+cellId).bind('click', bind(this, this.didSelectedRow));
+	};
+	
+	this.dropCell=function(){
+		$("#"+this.cellId).die('click');	
 	};
 	
 };       
         
         
-function bind(scope, fn) {
-		return function() {
-			fn.apply(scope, arguments);
-		};
-	};

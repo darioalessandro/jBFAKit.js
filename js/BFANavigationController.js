@@ -26,25 +26,50 @@ if(typeof BFA== "undefined"){
 
 BFA.NavigationController= function(containerId){
 	this.containerId= containerId;
+	this.visibleController=null;
 	this.pushController= function(controllerRef){
 		//TODO: Probably we want to add some validation here.
-		controllerRef.navigationController= this;
-		this.injectController(controllerRef);
-		window.history.pushState(controllerRef.title, "Title", "#"+controllerRef.title);
+		//This logic sucks because I was struggling with the stupid browser, I need to refactor it later on.
+		if(this.visibleController==null){
+			this.injectController(controllerRef);
+			window.history.pushState(controllerRef.title, "Title", "#"+controllerRef.title);
+		}
+		else if(controllerRef.title!=this.visibleController.title){
+			this.injectController(controllerRef);
+			window.history.pushState(controllerRef.title, "Title", "#"+controllerRef.title);
+		}
 	};
 	
 	this.injectController= function(controllerRef){
-		controllerRef.viewWillAppear();
+		//TODO: we'll get rid of this soon...
+		if(this.visibleController!=null){
+			this.visibleController.viewWillDissapear();
+		}
+		if(this.visibleController!=null){
+			this.visibleController.viewDidUnload();
+		}
+		controllerRef.viewWillAppear();		
 		$('#'+this.containerId).html(controllerRef.view.HTMLString());
 		//TODO: We need to detect when the dom injected the new stuff...
-		setTimeout(bind(controllerRef, controllerRef.viewDidAppear), 100);		
+		// setTimeout(bind(controllerRef, controllerRef.viewDidAppear), 100);
+		this.visibleController=controllerRef;		
 	};
 	
 	this.pop=function(stackstate){
 		if(typeof stackstate.state != "undefined" && stackstate.state!=null){
-			this.injectController(eval("new "+stackstate.state+"()"));
+			if(stackstate.state!=this.visibleController.title){
+				this.injectController(eval("new "+stackstate.state+"()"));
+			}
 		}
 	};
 	
 	window.onpopstate= bind(this, this.pop);
+	
+	this.hideAnimated=function(){
+		//("#"+this.containerId).css.addClass("removeNavTabContainer");
+	};
+	
+	this.showAnimated=function(){
+		//("#"+this.containerId).css.addClass("visibleNavTabContainer");
+	};
 }

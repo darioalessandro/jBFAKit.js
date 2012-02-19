@@ -33,8 +33,9 @@ BFA.TableView= function(cellId, cellColor, cellImage, title, message, detailMess
 	this.detailMesage= detailMessage;
 	this.title=title;
 	this.delegate=delegate;
-	
-	
+	$("#"+this.cellId).live('click', bind(this,function(){
+		this.delegate.didSelectedRow(this);	
+	}));
 	
 	this.htmlRow=function(){
 		return "<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\"> \
@@ -47,12 +48,10 @@ BFA.TableView= function(cellId, cellColor, cellImage, title, message, detailMess
 				</div>";
 	};
 	
-	this.didSelectedRow=function(){
-		console.log("click");
-		this.delegate.didSelectedRow(this);
+	this.dropCell=function(){
+		$("#"+this.cellId).die('click');	
 	}
-				
-				
+					
 	this.insertRowIntoContainer= function(tableContainerid, cellColor, cellImage, title, message, detailMessage){
 		if(cellColor!=null){
 			this.cellColor= cellColor;
@@ -67,15 +66,10 @@ BFA.TableView= function(cellId, cellColor, cellImage, title, message, detailMess
 		
 		var currentInnerHTML= $("#"+tableContainerid).html();
 		currentInnerHTML= currentInnerHTML.concat(this.htmlRow());
-		$("#"+tableContainerid).html(currentInnerHTML);
-		$("#"+cellId).bind('click', bind(this, this.didSelectedRow));
+		$("#"+tableContainerid).html(currentInnerHTML);		
+
 	};
 	
 };       
         
         
-function bind(scope, fn) {
-		return function() {
-			fn.apply(scope, arguments);
-		};
-	};

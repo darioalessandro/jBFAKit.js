@@ -27,7 +27,7 @@ if(typeof BFA== "undefined"){
 BFA.ViewController= function(){
 this.navigationController= null;
 this.view= new BFA.View();	
-}
+};
 
 BFA.ViewController.prototype.viewWillAppear= function(){
 	
@@ -37,3 +37,10 @@ BFA.ViewController.prototype.viewDidAppear= function(){
 	
 };
 
+BFA.ViewController.prototype.viewWillDissapear= function(){
+	console.log("viewWillDissapear");
+};
+
+BFA.ViewController.prototype.viewDidUnload= function(){
+	console.log("viewDidUnload");
+};
