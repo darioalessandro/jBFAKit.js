@@ -55,7 +55,9 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
      		this.dropCell();
      		$("#"+this.cellId+"canvas").bind("click", function(click){
      			console.log("clickOnCanvas");
-     		});   		
+     		});   	
+     		this.showEditableCell();
+     			
      	}else{
      		$(".blocker").die("click");
      		$(".blocker").remove();     		
@@ -65,22 +67,43 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
      		$("#"+this.cellId).live('click', bind(this, function(){
 				this.didSelectedRow();
 			}));
+			this.showNonEditableCell();
      	}
    };
    
-   // this.delegate.didSelectedRow(this);			
+   // this.delegate.didSelectedRow(this);	
+   
+   this.showEditableCell=function(){
+   		// var currentInnerHTML= $("#"+this.cellId).html();
+		var currentInnerHTML= this.editableHTMLRow();
+		$("#"+this.cellId).html(currentInnerHTML);	
+   };		
 	
+	this.showNonEditableCell=function(){
+		// var currentInnerHTML= $("#"+this.cellId).html();
+		var currentInnerHTML= this.nonEditableHTML();
+		$("#"+this.cellId).html(currentInnerHTML);
+	};
 	
-	// this.htmlRow=function(){
-		// return "<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\"> \
-					// <img src=\""+this.cellImage+"\" alt=\"../../resources/pablo.jpg\" class=\"tableImageCell\"> \
-					// <div class=\"tableCellTitle\">"+this.title+"</div>\
-					// <div class=\"tableDetailCell\"> \
-						// <div class=\"userMessage\" id=\"IDuserMessage1\">"+this.message+"</div> \
-						// <canvas  id=\""+this.cellId+"canvas\" width=\"460\" height=\"60\">Your browser does not have support for canvas.</canvas>\
-					// </div>\
-				// </div>";
-	// };
+	this.htmlRow=function(){
+		return "<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\"> \
+					<img src=\""+this.cellImage+"\" alt=\"../../resources/pablo.jpg\" class=\"tableImageCell\"> \
+					<div class=\"tableCellTitle\">"+this.title+"</div>\
+					<div class=\"tableDetailCell\"> \
+						<div class=\"userMessage\" id=\"IDuserMessage1\">"+this.message+"</div> \
+						<canvas  id=\""+this.cellId+"canvas\" width=\"460\" height=\"60\">Your browser does not have support for canvas.</canvas>\
+					</div>\
+				</div>";
+	};
+	
+	this.nonEditableHTML=function(){
+		return "<img src=\""+this.cellImage+"\" alt=\"../../resources/pablo.jpg\" class=\"tableImageCell\"> \
+					<div class=\"tableCellTitle\">"+this.title+"</div>\
+					<div class=\"tableDetailCell\"> \
+						<div class=\"userMessage\" id=\"IDuserMessage1\">"+this.message+"</div> \
+						<canvas  id=\""+this.cellId+"canvas\" width=\"460\" height=\"60\">Your browser does not have support for canvas.</canvas>\
+					</div>";
+	};
 
 	// this.editableHTMLRow=function(){
 		// return "<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\"> \
@@ -92,9 +115,9 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 				// </div>";	
 	// };
 	
-	this.htmlRow=function(){
+	this.editableHTMLRow=function(){
 		var row= new String();
-		row=row.concat("<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\">");
+		// row=row.concat("<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\">");
 		row=row.concat("<img src=\""+this.cellImage+"\" alt=\"../../resources/pablo.jpg\" class=\"tableImageCell\"> ");
 		row=row.concat("<div class=\"tableCellTitle\">"+this.title+"</div>");
 		row=row.concat("<div class=\"tableDetailCell\">");
@@ -103,26 +126,17 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 		row=row.concat("<input type=\"button\" value=\"Cancelar\" style=\"width:100px; height: 80px;float: right;font-size: 15px;margin-top: 38px;\">");
 		row=row.concat("<input type=\"text\" placeholder=\"Porcentaje (0..100)\"style=\"height: 27px;float: right;font-size: 13px;margin-top: 26px;border-right-width: 2px;margin-right: 10px;\">");
 		row=row.concat("</div>");
-		row=row.concat("</div>");
-					
-					
-					// <textarea type=\"text\" class=\"userMessage\" id=\"IDuserMessage1\" style=\"margin-top: 0px; margin-bottom: 0px; height: 55px; margin-left: 0px; margin-right: 0px; width: 449px; \"></textarea>\
-					// <input type=\"text\" style=\"height: 27px;float: right;font-size: 15px;\"> \
-													
-				
+		// row=row.concat("</div>");
 		return row; 	
 	};
-
-	
-	// this.didSelectedRow=function(){
-		// console.log("click");
-		// this.delegate.didSelectedRow(this);
-	// };
-				
-				
+							
 	this.insertRowIntoContainer= function(tableContainerid, cellColor, cellImage, title, message, detailMessage, progress){
 		if(cellColor!=null){
 			this.cellColor= cellColor;
+		}
+		
+		if(tableContainerid!=null){
+			this.tableContainerid=tableContainerid;
 		}
 		if(cellImage){
 			this.cellImage= cellImage;
@@ -136,9 +150,10 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 		this.detailMesage= detailMessage;
 		this.title=title;
 		
-		var currentInnerHTML= $("#"+tableContainerid).html();
+		var currentInnerHTML= $("#"+this.tableContainerid).html();
 		currentInnerHTML= currentInnerHTML.concat(this.htmlRow());
-		$("#"+tableContainerid).html(currentInnerHTML);
+		$("#"+this.tableContainerid).html(currentInnerHTML);
+		
 	};
 	
 	this.dropCell=function(){
