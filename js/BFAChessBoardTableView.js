@@ -36,33 +36,37 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 	this.progress=progress;
 	this.highlighted=false;
 	
-	$("#"+this.cellId).live('click', bind(this,function(){
+	$("#"+this.cellId).live('click', bind(this, function(){
+		this.didSelectedRow();
+	}));
+			
+	this.didSelectedRow=function(){
 		if(this.highlighted==false){
-			var htmlBody= $("body").html();
-			htmlBody= htmlBody.concat("<div id=\"blocker\"></div>");
-			$("body").html(htmlBody);
+			$('header').after("<div class=\"blocker\"></div>");			
+			$(".blocker").live("click", bind(this, function(){
+				this.didSelectedRow();
+			}));
+			this.highlighted=true;
 			$("#"+this.cellId).bind('animationend webkitAnimationEnd', bind(this, function() { 
      			$("#"+this.cellId).css("-webkit-transform", "scale(1.1,1.1)");
      			$("#"+this.cellId).unbind('animationend webkitAnimationEnd');     			
      		}));
      		$("#"+this.cellId).addClass("hightlightedRow");
-     		this.highlighted=true;
+     		this.dropCell();     		
      	}else{
-     		// $("#blocker").remove();
-     		$("#"+this.cellId).bind('animationend webkitAnimationEnd', bind(this, function() { 
-     			$("#"+this.cellId).removeClass("unselectRow");
-     			$("#"+this.cellId).css("-webkit-transform", "scale(1,1)");
-     			$("#"+this.cellId).unbind('animationend webkitAnimationEnd');    			
-     		}));
+     		$(".blocker").die("click");
+     		$(".blocker").remove();     		
      		$("#"+this.cellId).removeClass("hightlightedRow");
-     		$("#"+this.cellId).addClass("unselectRow");
-     		
+     		$("#"+this.cellId).css("-webkit-transform", "scale(1,1)");     		     		
      		this.highlighted=false;
+     		$("#"+this.cellId).live('click', bind(this, function(){
+				this.didSelectedRow();
+			}));
      	}
-     	
-		
-		this.delegate.didSelectedRow(this);	
-	}));
+   };
+   
+   // this.delegate.didSelectedRow(this);			
+	
 	
 	this.htmlRow=function(){
 		return "<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\"> \
@@ -75,10 +79,10 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 				</div>";
 	};
 	
-	this.didSelectedRow=function(){
-		console.log("click");
-		this.delegate.didSelectedRow(this);
-	};
+	// this.didSelectedRow=function(){
+		// console.log("click");
+		// this.delegate.didSelectedRow(this);
+	// };
 				
 				
 	this.insertRowIntoContainer= function(tableContainerid, cellColor, cellImage, title, message, detailMessage, progress){
