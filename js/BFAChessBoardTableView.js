@@ -141,7 +141,8 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 		row=row.concat("<textarea type=\"text\" id=\"updateTextAreaId\" placeholder=\"Actualiza el status de tu meta! ej: \'Estoy a punto de lograrlo\'\" class=\"userMessage\" id=\"IDuserMessage1\" style=\"margin-top: 0px; margin-bottom: 0px; height: 55px; margin-left: 0px; margin-right: 0px;width: 476px; max-width: 476px; max-height: 55px; font-size: 15px; \"></textarea>");
 		row=row.concat("<input type=\"button\" id=\"aceptar\" value=\"Aceptar\" style=\"width:100px; height: 80px;float: right;font-size: 15px;bottom: 0;margin-bottom: 0;position: relative;top: 38px;left: 5px;\">");
 		row=row.concat("<input type=\"button\" id=\"cancelar\" value=\"Cancelar\" style=\"width:100px; height: 80px;float: right;font-size: 15px;margin-top: 38px;\">");
-		row=row.concat("<input type=\"text\" id=\"updateTextInputId\" placeholder=\"Porcentaje (0..100)\"style=\"height: 27px;float: right;font-size: 13px;margin-top: 26px;border-right-width: 2px;margin-right: 10px;\">");
+		row=row.concat("<div style=\"font-size: 16px;\">Actualiza tu porcentaje de avance:</div><input type=\"range\" min=\"0\" max=\"100\" id=\"updateTextInputId\" placeholder=\"Porcentaje (0..100)\"style=\"width: 200px; height: 27px;float: right;font-size: 13px;margin-top: 18px;border-right-width: 2px;margin-right: 10px;\" onchange=\"showValue(this.value)\">");
+		row=row.concat("<span id=\"range\">0</span>");
 		row=row.concat("</div>");
 		// row=row.concat("</div>");
 		return row; 	
@@ -178,5 +179,9 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 	};
 	
 };       
-        
+       
+ function showValue(newValue)
+{
+	document.getElementById("range").innerHTML=newValue+"%";
+} 
         
