@@ -41,75 +41,58 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 	}));
 			
 	this.didSelectedRow=function(){
-		if(this.highlighted==false){
-			$('header').after("<div class=\"blocker\"></div>");			
-			$(".blocker").live("click", bind(this, function(){
-				this.didSelectedRow();
-			}));
-			this.highlighted=true;
-			$("#"+this.cellId).bind('animationend webkitAnimationEnd', bind(this, function() { 
-     			$("#"+this.cellId).css("-webkit-transform", "scale(1.1,1.1)");
-     			$("#"+this.cellId).unbind('animationend webkitAnimationEnd');     			
-     		}));
-     		$("#"+this.cellId).addClass("hightlightedRow");
-     		this.dropCell();
-     		$("#"+this.cellId+"canvas").bind("click", function(click){
-     			console.log("clickOnCanvas");
-     		});   	
-     		$("#aceptar").live("click", bind(this, function(){     			
-     		// $id=$_GET["id"];
-			// $fbid= $_GET["fbid"];
-			// $goalName=$_GET["goalName"];
-			// $percentageDone=$_GET["percentageDone"];
-			// $updatemessage=$_GET["updatemessage"];
-			
-			// this.goal=FWG.context.selectedGoal;
-				var update= {
-					goal_name:FWG.context.selectedGoal.name,
-					progress: $("#updateTextInputId").val(),
-					update: $("#updateTextAreaId").val(),
-				};
-				if(update.goal_name!=null && update.progress!=null && update.update!=null && update.update!=""  && update.progress!=""){
-     				FWG.context.updateChessBoard(update);
-     				this.didSelectedRow();
-     			}else{
-     				alert("datos incompletos");
-     			}
-     			
-     		}));
-     		
-     		$("#cancelar").live("click", bind(this,function(){
-     			this.didSelectedRow();
-     		}));
-     		this.showEditableCell();
-     			
-     	}else{
-     		$(".blocker").die("click");
-     		$(".blocker").remove();     		
-     		$("#"+this.cellId).removeClass("hightlightedRow");
-     		$("#"+this.cellId).css("-webkit-transform", "scale(1,1)");     		     		
-     		this.highlighted=false;
-     		$("#"+this.cellId).live('click', bind(this, function(){
-				this.didSelectedRow();
-			}));
-			this.showNonEditableCell();
-			$("#aceptar").die("click");
-     		$("#cancelar").die("click");
-     	}
+		delegate.didSelectedRow(this);
    };
    
-   // this.delegate.didSelectedRow(this);	
-   
    this.showEditableCell=function(){
-   		// var currentInnerHTML= $("#"+this.cellId).html();
+    	BFA.blocker.show(bind(this, function(){
+			this.didSelectedRow();
+		}));					
+			
+		$("#"+this.cellId).bind('animationend webkitAnimationEnd', bind(this, function() { 
+     		$("#"+this.cellId).css("-webkit-transform", "scale(1.1,1.1)");
+     		$("#"+this.cellId).unbind('animationend webkitAnimationEnd');     			
+     	}));
+     	
+     	$("#"+this.cellId).addClass("hightlightedRow");
+     	this.dropCell();
+     	$("#"+this.cellId+"canvas").bind("click", function(click){
+     		console.log("clickOnCanvas");
+     	});   	
+     	$("#aceptar").live("click", bind(this, function(){     			
+			var update= {
+				goal_name:FWG.context.selectedGoal.name,
+				progress: $("#updateTextInputId").val(),
+				update: $("#updateTextAreaId").val(),
+			};
+			if(update.goal_name!=null && update.progress!=null && update.update!=null && update.update!=""  && update.progress!=""){
+     			FWG.context.updateChessBoard(update);
+     			this.didSelectedRow();
+     		}else{
+     			alert("datos incompletos");
+     		}     			
+     	}));
+     		
+     	$("#cancelar").live("click", bind(this,function(){
+     		this.didSelectedRow();
+     	}));
+     	
 		var currentInnerHTML= this.editableHTMLRow();
 		$("#"+this.cellId).html(currentInnerHTML);	
    };		
 	
 	this.showNonEditableCell=function(){
-		// var currentInnerHTML= $("#"+this.cellId).html();
+		BFA.blocker.hide();    		
+     		$("#"+this.cellId).removeClass("hightlightedRow");
+     		$("#"+this.cellId).css("-webkit-transform", "scale(1,1)");     		     		
+     		
+     		$("#"+this.cellId).live('click', bind(this, function(){
+     			this.didSelectedRow();
+     		}));
 		var currentInnerHTML= this.nonEditableHTML();
 		$("#"+this.cellId).html(currentInnerHTML);
+		$("#aceptar").die("click");
+     	$("#cancelar").die("click");
 	};
 	
 	this.htmlRow=function(){
@@ -134,17 +117,15 @@ BFA.ChessBoardTableView= function(cellId, cellColor, cellImage, title, message, 
 	
 	this.editableHTMLRow=function(){
 		var row= new String();
-		// row=row.concat("<div class=\"brandedFont tableRow\" style=\"background:"+this.cellColor+";\" id=\""+this.cellId+"\">");
 		row=row.concat("<img src=\""+this.cellImage+"\" alt=\"../../resources/pablo.jpg\" class=\"tableImageCell\"> ");
 		row=row.concat("<div class=\"tableCellTitle\">"+this.title+"</div>");
 		row=row.concat("<div class=\"tableDetailCell\">");
 		row=row.concat("<textarea type=\"text\" id=\"updateTextAreaId\" placeholder=\"Actualiza el status de tu meta! ej: \'Estoy a punto de lograrlo\'\" class=\"userMessage\" id=\"IDuserMessage1\" style=\"margin-top: 0px; margin-bottom: 0px; height: 55px; margin-left: 0px; margin-right: 0px;width: 476px; max-width: 476px; max-height: 55px; font-size: 15px; \"></textarea>");
 		row=row.concat("<input type=\"button\" id=\"aceptar\" value=\"Aceptar\" style=\"width:100px; height: 80px;float: right;font-size: 15px;bottom: 0;margin-bottom: 0;position: relative;top: 38px;left: 5px;\">");
 		row=row.concat("<input type=\"button\" id=\"cancelar\" value=\"Cancelar\" style=\"width:100px; height: 80px;float: right;font-size: 15px;margin-top: 38px;\">");
-		row=row.concat("<div style=\"font-size: 16px;\">Actualiza tu porcentaje de avance:</div><input type=\"range\" min=\"0\" max=\"100\" id=\"updateTextInputId\" placeholder=\"Porcentaje (0..100)\"style=\"width: 200px; height: 27px;float: right;font-size: 13px;margin-top: 18px;border-right-width: 2px;margin-right: 10px;\" onchange=\"showValue(this.value)\">");
-		row=row.concat("<span id=\"range\">0</span>");
+		row=row.concat("<div style=\"font-size: 16px;\">Actualiza tu porcentaje de avance:</div><input type=\"range\" min=\"0\" max=\"100\" value=\""+ this.progress+ "\"id=\"updateTextInputId\" placeholder=\"Porcentaje (0..100)\"style=\"width: 200px; height: 27px;float: right;font-size: 13px;margin-top: 18px;border-right-width: 2px;margin-right: 10px;\" onchange=\"showValue(this.value)\">");
+		row=row.concat("<span id=\"range\">"+this.progress+"%</span>");
 		row=row.concat("</div>");
-		// row=row.concat("</div>");
 		return row; 	
 	};
 							
